@@ -8,8 +8,9 @@ import (
 )
 
 func Main() {
+	fInput := formatInput(getInput())
 
-	fmt.Println(checkSafety(formatInput(getInput())))
+	fmt.Println(checkSafety(fInput))
 }
 
 func getInput() string {
@@ -33,51 +34,56 @@ func formatInput(input string) [][]int {
 			formatedInt[x], _ = strconv.Atoi(splitString[x])
 		}
 		formatedInput[i] = formatedInt
+
 	}
+
 	return formatedInput
 }
 
-func getDiffs(input [][]int) [][]int {
-	diffs := make([][]int, len(input))
+// func getDiffs(input [][]int) [][]int {
+// 	diffs := make([][]int, len(input))
 
-	for i := range len(diffs) {
-		diff := make([]int, len(input[i])-1)
+// 	for i := range len(diffs) {
+// 		diff := make([]int, len(input[i])-1)
 
-		for x := range len(input[i]) - 1 {
-			diff[x] = input[i][x] - input[i][x+1]
-		}
-		diffs[i] = diff
-		//fmt.Println(diff)
-	}
-	return diffs
+// 		for x := range len(input[i]) - 1 {
+// 			diff[x] = input[i][x] - input[i][x+1]
+// 		}
+// 		diffs[i] = diff
+// 		//fmt.Println(diff)
+// 	}
+// 	return diffs
 
-}
+// }
 
 func checkSafety(input [][]int) int {
 	safety := 0
 
 	for i := range len(input) {
+		fmt.Println(input[i])
 		s := checkSlice(input[i])
 
 		if s {
 			safety++
-			fmt.Println(input[i], s)
+			//fmt.Println(i, input[i], s)
 		} else {
-			for x := range len(input[i]) {
-				fmt.Println(x)
-				if checkSlice(remove(input[i], x)) {
+			for x := 0; x < len(input[i]); x++ {
+				newSlice := remove(input[i], x)
+				fmt.Println(newSlice)
+				slice := checkSlice(newSlice)
+				if slice {
 					safety++
-					fmt.Println(input[i], "fTs")
+					//fmt.Println(i, input[i], "fTs")
 					break
 				}
 
 			}
 
-			fmt.Println(input[i], s)
 		}
+		fmt.Println(i, input[i], s)
 
 	}
-	
+
 	return safety
 }
 
@@ -109,8 +115,9 @@ func checkSlice(slice []int) bool {
 
 func remove(slice []int, s int) []int {
 
-	if s == len(slice)-1 {
-		return slice[:s]
-	}
-	return append(slice[:s], slice[s+1:]...)
+	new := make([]int, 0, len(slice)-1)
+	new = append(new, slice[:s]...)
+	new = append(new, slice[s+1:]...)
+
+	return new
 }
